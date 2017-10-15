@@ -17,7 +17,7 @@ brew upgrade vim
 
 3. Create symlinks:
 ```bash
-ln -s ~/.dotfile/vimrc/ ~/.vimrc
+ln -s ~/.dotfile/vimrc ~/.vimrc
 ln -s ~/.dotfile/gitconfig ~/.gitconfig
 ln -s ~/.dotfile/gitignore_global ~/.gitignore_global
 ln -s ~/.dotfile/hyper.js ~/.hyper.js
