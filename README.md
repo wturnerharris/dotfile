@@ -1,12 +1,12 @@
 # Dotfiles
-Configs for vim, git, and [Hyper](https://hyper.is/). Almost all of these settings were borrowed from [@colepeters](https://github.com/colepeters), [@mrmrs](https://github.com/mrmrs), and based on Cole's comments, the [YADR](https://github.com/skwp/dotfiles) dotfiles library.
+Configs for vim, git, and [Hyper](https://hyper.is/). Almost all of these settings were borrowed from [@colepeters](https://github.com/colepeters), [@mrmrs](https://github.com/mrmrs), based on Cole's comments, the [YADR](https://github.com/skwp/dotfiles) dotfiles library, and curated by [@estrattonbailey](https://github.com/estrattonbailey), including finding this matching terminal theme [like this one](https://github.com/nathanbuchar/atom-one-dark-terminal) for terminal and iterm.
 
-I also recommend a matching terminal theme [like this one](https://github.com/nathanbuchar/atom-one-dark-terminal).
+My enhancements include some bash alias for helpful shortcuts around the Mac.
 
 ## Install
 1. Clone this repo to a directory in your root.
 ```bash
-git clone git@github.com:estrattonbailey/.dotfiles.git ~/.dotfiles
+git clone git@github.com:wturnerharris/dotfile.git ~/.dotfile
 ```
 
 2. Install or update vim. Autocompletion requires that it be installed with Lua.
@@ -17,10 +17,11 @@ brew upgrade vim
 
 3. Create symlinks:
 ```bash
-ln -s ~/.dotfiles/vimrc/ ~/.vimrc
-ln -s ~/.dotfiles/gitconfig ~/.gitconfig
-ln -s ~/.dotfiles/gitignore_global ~/.gitignore_global
-ln -s ~/.dotfiles/hyper.js ~/.hyper.js
+ln -s ~/.dotfile/vimrc/ ~/.vimrc
+ln -s ~/.dotfile/gitconfig ~/.gitconfig
+ln -s ~/.dotfile/gitignore_global ~/.gitignore_global
+ln -s ~/.dotfile/hyper.js ~/.hyper.js
+ln -s ~/.dotfile/.bash_alias ~/.bash_alias
 ```
 
 4. Install Vim Plug:
@@ -38,6 +39,11 @@ vim +PlugInstall +qa
 6. Use it:
 ```bash
 vim <filename>
+```
+
+7. Profit:
+```bash
+echo "source ~/.bash_alias" >> ~/.bashrc
 ```
 
 ## Usage
