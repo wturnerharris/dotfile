@@ -1,0 +1,25 @@
+[user]
+	name = Wesley Turner-Harris
+	email = wturnerharris@gmail.com
+[core]
+	excludesfile = /Volumes/Master/wes.turner/.gitignore_global
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = "opendiff "
+	trustExitCode = true
+[filter "media"]
+	required = true
+	clean = git media clean %f
+	smudge = git media smudge %f
+[filter "hawser"]
+	clean = git hawser clean %f
+	smudge = git hawser smudge %f
+	required = true
+[filter "lfs"]
+	clean = git lfs clean %f
+	smudge = git lfs smudge %f
+	required = true
+[commit]
+	template = /Volumes/Master/wes.turner/.stCommitMsg
