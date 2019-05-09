@@ -76,7 +76,7 @@ echo $DONE
 
 # Install plugins:
 echo "${YELLOW}Installing vim plugins...${DEFAULT}"
-vim +PlugInstall +qaecho 
+vim +'PlugInstall --sync' +qa
 echo $DONE
 
 WRITE_ALIASES=$(cat ~/.bashrc | grep bash_aliases)
