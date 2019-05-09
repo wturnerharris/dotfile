@@ -84,7 +84,4 @@ if [ $? > 0 ]; then
   echo "${YELLOW}Adding bash_aliases to bashrc file...${DEFAULT}"
   echo "source ~/.bash_aliases" >> ~/.bashrc
 fi
-
-printf "%s\n\n" "${YELLOW}Use it:${DEFAULT}"
-echo "vim <filename>"
 echo $DONE
