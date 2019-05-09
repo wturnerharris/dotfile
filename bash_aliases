@@ -1,5 +1,6 @@
 #!/bin/bash
 
+### executable functions
 adduser()
 {
   if [ -z "$1" ]                           # Is parameter #1 zero length?
@@ -16,6 +17,90 @@ adduser()
      sudo dseditgroup -o edit -a $1 -t user $2
    fi
 }
+
+# Update master branch from remote
+gituptodate() {
+
+  # update all remotes and branches
+  git fetch --all 
+
+  # what's the commit of your local master?
+  LOCAL_MASTER=$(git rev-parse master)
+
+  # what's the commit of the origin master?
+  REMOTE_MASTER=$(git rev-parse origin/master)
+ 
+  if [ "$LOCAL_MASTER" != "$REMOTE_MASTER" ]; then
+    git checkout master
+    git reset --hard $REMOTE_MASTER
+    echo "Updating local master branch "$(echo $LOCAL_MASTER | cut -c1-7)" with "$(echo $REMOTE_MASTER | cut -c1-7)
+    git status
+  fi
+}
+
+# Hide files in Mac
+hide() {
+  if [ $# -eq 1 ] && [ "$1" = "help" ]
+    then
+      echo "Usage:"
+      echo "  hide on path_to_file"
+      echo "  hide off path_to_file"
+      return
+  fi
+  if [ $# -lt 2 ]
+    then
+      echo "Not Enough Arguments Supplied"
+      return
+  fi
+  if [ "$1" = "on" ]
+    then
+      ON="hidden"
+  else
+    ON="nohidden"
+  fi
+  sudo chflags $ON $2
+}
+
+# Open a finder window with root priv
+finder() {
+  sudo /System/Library/CoreServices/Finder.app/Contents/MacOS/Finder &
+}
+
+# bash completion for the `terminus` command
+
+_terminus_complete() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+
+  IFS=$'\n';  # want to preserve spaces at the end
+  local opts=( $(terminus cli completions --line="$COMP_LINE" --point="$COMP_POINT") )
+
+  if [[ $opts = "<file>" ]]
+  then
+    COMPREPLY=( $(compgen -f -- $cur) )
+  else
+    COMPREPLY=$opts
+  fi
+}
+
+complete -o nospace -F _terminus_complete terminus
+
+# Delete all but the master branch
+alias gittyup='git branch | grep -v "master" | xargs git branch -D'
+# Max 4 pings by default
+alias ping='ping -c 4'
+# Show IP Address
+alias ipaddr="echo $(curl -s checkip.dyndns.org | sed -e 's/.*IP: //' -e 's/<.*$//')"
+alias ipaddr2='curl ipecho.net/plain ; echo'
+# Flush DNS
+alias flushdns='sudo killall -HUP mDNSResponder'
+# Brew stuff
+alias brewski='brew update && brew upgrade --all && brew cleanup; brew cask cleanup; brew doctor; brew prune'
+alias brewuptodate='cd "$(brew --repository)" && git fetch && git reset --hard origin/master'
+# Ruby stuff
+alias brake="bundle exec rake"
+# Start postgres
+alias pg='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log'
+# Connect to work if logged in to VPN
 alias sites='cd ~/Sites'
 alias hosts='sudo vim /etc/hosts'
 alias bump='git commit -am "Update changelog and bump versions"'

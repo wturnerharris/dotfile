@@ -1,112 +1,44 @@
 #!/bin/bash
 
-### executable functions
+##############################
+####  BASH CONFIG/EXPORTS  ###
+##############################
 
-# Update master branch from remote
-gituptodate() {
+export TERM=xterm
 
-  # update all remotes and branches
-  git fetch --all 
+# Add colors to Terminal
+export CLICOLOR=1
+export LSCOLORS=GxFxCxDxBxegedabagaced
+export LSCOLORS=ExFxBxDxCxegedabagacad
+export PS1='\[\e]0;\w\a\]\n\[\e[32m\]\u@\h: \[\e[33m\]\w\[\e[0m\]\n\$ '
 
-  # what's the commit of your local master?
-  LOCAL_MASTER=$(git rev-parse master)
+## Auto merge without commit message
+export GIT_MERGE_AUTOEDIT=no
 
-  # what's the commit of the origin master?
-  REMOTE_MASTER=$(git rev-parse origin/master)
- 
-  if [ "$LOCAL_MASTER" != "$REMOTE_MASTER" ]; then
-    git checkout master
-    git reset --hard $REMOTE_MASTER
-    echo "Updating local master branch "$(echo $LOCAL_MASTER | cut -c1-7)" with "$(echo $REMOTE_MASTER | cut -c1-7)
-    git status
-  fi
-}
+### bash history improvements
 
-# Hide files in Mac
-hide() {
-  if [ $# -eq 1 ] && [ "$1" = "help" ]
-    then
-      echo "Usage:"
-      echo "  hide on path_to_file"
-      echo "  hide off path_to_file"
-      return
-  fi
-  if [ $# -lt 2 ]
-    then
-      echo "Not Enough Arguments Supplied"
-      return
-  fi
-  if [ "$1" = "on" ]
-    then
-      ON="hidden"
-  else
-    ON="nohidden"
-  fi
-  sudo chflags $ON $2
-}
+# Append history file rather then overwrite it
+shopt -s histappend
 
-# Open a finder window with root priv
-finder() {
-  sudo /System/Library/CoreServices/Finder.app/Contents/MacOS/Finder &
-}
+# Don't put duplicate lines in history
+export HISTCONTROL=ignoredups
 
-# bash completion for the `terminus` command
+# Store 1000 commands in bash history
+export HISTFILESIZE=2000
+export HISTSIZE=2000
 
-_terminus_complete() {
-  local cur=${COMP_WORDS[COMP_CWORD]}
+# Store when a command was used for the last time
+export HISTTIMEFORMAT='%F %T '
 
-  IFS=$'\n';  # want to preserve spaces at the end
-  local opts=( $(terminus cli completions --line="$COMP_LINE" --point="$COMP_POINT") )
+# Ignore pwd history
+export HISTIGNORE="pwd:history"
 
-  if [[ $opts = "<file>" ]]
-  then
-    COMPREPLY=( $(compgen -f -- $cur) )
-  else
-    COMPREPLY=$opts
-  fi
-}
-
-complete -o nospace -F _terminus_complete terminus
-
-### executable aliases
-
-# Delete all but the master branch
-alias gittyup='git branch | grep -v "master" | xargs git branch -D'
-
-# Grab the pub ssh key
-alias sshkey='cat ~/.ssh/id_rsa.pub | pbcopy'
-
-# Max 4 pings by default
-alias ping='ping -c 4'
-
-# Show IP Address
-alias ipaddr="echo $(curl -s checkip.dyndns.org | sed -e 's/.*IP: //' -e 's/<.*$//')"
-alias ipaddr2='curl ipecho.net/plain ; echo'
-
-# Flush DNS
-alias flushdns='sudo killall -HUP mDNSResponder'
-
-# Update brew, upgrade brew, cleanup brew
-alias brewski='brew update && brew upgrade --all && brew cleanup; brew cask cleanup; brew doctor; brew prune'
-
-# Update brew manually
-alias brewuptodate='cd "$(brew --repository)" && git fetch && git reset --hard origin/master'
-
-# Run rake
-alias brake="bundle exec rake"
-
-# Start postgres
-alias pg='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log'
-
-# Connect to work if logged in to VPN
-alias barrel='ssh wes.turner@10.0.1.214'
+# Pull in any newly written lines, allowing to share history within active sessions
+export PROMPT_COMMAND='history -n;'
 
 ### Paths
-export PATH=/usr/local/bin:$PATH
-export PATH=/usr/local/sbin:$PATH
-export PATH=/usr/local/mysql/bin:$PATH
+export PATH=$HOME/.bin:/usr/local/bin:/usr/local/sbin:$PATH
 export PATH=$PATH:$HOME/.composer/vendor/bin
-export PATH=$PATH:$HOME/.bin
 
 # Android
 export ANDROID_HOME=/usr/local/opt/android-sdk
@@ -117,21 +49,11 @@ export PATH=$PATH:/usr/local/apache-ant-1.9.4/bin
 export PATH=$PATH:/usr/local/share/npm/bin
 export PATH=$HOME/.node_modules/bin:$PATH
 
-# Ruby
-export RUBY_CFLAGS="-march=native -O3"
-export PATH=$HOME/.rbenv/bin:$PATH
-#eval "$(rbenv init -)"
-#if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
-
 ### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
+export PATH=/usr/local/heroku/bin:$PATH
 
-# MongoDB
-export PATH=$PATH:/usr/local/mongodb/bin
-
-# PHP7 CLI (brew)
-export PATH="$(brew --prefix homebrew/php/php70)/bin:$PATH"
-
-# Add colors to Terminal
-export CLICOLOR=1
-export LSCOLORS=GxFxCxDxBxegedabagaced
+### fire up nvm
+if [ -d ~/.nvm ]; then 
+  export NVM_DIR=~/.nvm
+  source $(brew --prefix nvm)/nvm.sh
+fi
