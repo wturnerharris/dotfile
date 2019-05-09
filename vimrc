@@ -5,7 +5,7 @@
 "
 "
 "
-call plug#begin('~/.dotfile/vim/plugged')
+call plug#begin('~/.dotfiles/vim/plugged')
 Plug 'kristijanhusak/vim-hybrid-material'
 Plug 'altercation/vim-colors-solarized'
 Plug 'joshdick/onedark.vim'
@@ -94,7 +94,7 @@ if has('persistent_undo')
   " Save undos after file closes
   set undofile                          
   " Save undos in undodir within nvim dir
-  set undodir=~/.dotfile/vim/undodir    
+  set undodir=~/.dotfiles/vim/undodir    
 endif
 " This makes vim act like all other editors, buffers can
 " exist in the background without being in a window.
@@ -223,7 +223,7 @@ let delimitMate_expand_space = 1
 nnoremap <leader>fi :Grepper -noquickfix -open -switch -tool git <CR>
 
 " Source a settings file 
-" so ~/.dotfile/vim/settings.vim
+" so ~/.dotfiles/vim/settings.vim
 
 "
 "
