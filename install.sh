@@ -28,6 +28,7 @@ DONE="${GREEN}done${DEFAULT}"
 SOURCE_REPO_URL="git@github.com:wturnerharris/.dotfiles.git"
 SOURCE="$HOME/.dotfiles"
 FILES=(
+  "bashrc"
   "bash_aliases"
   "hyper.js"
   "gitconfig"
@@ -44,40 +45,47 @@ else
   git fetch && git pull
 fi
 
-# Install or update vim with brew. Autocompletion requires that it be installed with Lua.
-# Consider using https://github.com/lifepillar/vim-mucomplete to reduce the Lua dependency.
-FIND_BREW_VIM=$(brew list | xargs -L1 echo | grep vim)
-if [ $? > 0 ]; then 
-  echo "${YELLOW}Installing vim with brew...${DEFAULT}"
-  brew update
-  brew install vim
-  brew upgrade vim
-  echo $DONE
-fi
-
 echo "${YELLOW}Backing up existing dotfiles and creating symlinks...${DEFAULT}"
 for File in "${FILES[@]}"
 do 
+  # if not a symlink and not a file
   if ! [[ -L "$HOME/.$File" && -f "$HOME/.$File" ]]; then
     # Backup existing
     BACKUP=$(mv "$HOME/.$File" "$HOME/.$File.bak")
-
-    # Create symlinks
-    ln -s "$SOURCE/$File" "$HOME/.$File"
   fi
+  # Create symlinks
+  SYMLINK=$(ln -s "$SOURCE/$File" "$HOME/.$File")
 done
 echo $DONE
 
-# For more info, check out [the repo](https://github.com/junegunn/vim-plug), otherwise just use the CURL below.
-echo "${YELLOW}Installing Vim Plug...${DEFAULT}"
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-echo $DONE
+read -r -p "Install Vim, Vim Plug, and Vim Plugins? [y/N] " response
+case "$response" in
+  [yY][eE][sS]|[yY]) 
+  # Install or update vim with brew. Autocompletion requires that it be installed with Lua.
+  # Consider using https://github.com/lifepillar/vim-mucomplete to reduce the Lua dependency.
+  FIND_BREW_VIM=$(brew list | xargs -L1 echo | grep vim)
+  if [ $? -gt 0 ]; then 
+    echo "${YELLOW}Installing vim with brew...${DEFAULT}"
+    brew update
+    brew install vim
+    brew upgrade vim
+    echo $DONE
+  fi
+  # For more info, check out [the repo](https://github.com/junegunn/vim-plug), otherwise just use the CURL below.
+  echo "${YELLOW}Installing Vim Plug...${DEFAULT}"
+  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  echo $DONE
 
-# Install plugins:
-echo "${YELLOW}Installing vim plugins...${DEFAULT}"
-vim +'PlugInstall --sync' +qa
-echo $DONE
+  # Install plugins:
+  echo "${YELLOW}Installing Vim Plugins...${DEFAULT}"
+  vim +'PlugInstall --sync' +qa
+  echo $DONE
+  ;;
+  *)
+  printf "${YELLOW}Skipping Vim installation...${DEFAULT}"
+  ;;
+esac
 
 WRITE_ALIASES=$(cat ~/.bashrc | grep bash_aliases)
 if [ $? > 0 ]; then
