@@ -57,3 +57,4 @@ if [ -d ~/.nvm ]; then
   export NVM_DIR=~/.nvm
   source $(brew --prefix nvm)/nvm.sh
 fi
+source ~/.bash_aliases

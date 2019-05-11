@@ -73,7 +73,7 @@ case "$response" in
   fi
   # For more info, check out [the repo](https://github.com/junegunn/vim-plug), otherwise just use the CURL below.
   echo "${YELLOW}Installing Vim Plug...${DEFAULT}"
-  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+  curl -sfLo ~/.vim/autoload/plug.vim --create-dirs \
       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   echo $DONE
 
